@@ -390,9 +390,11 @@ def formatResult(result):
       abbr = chunk_spelling
 
     if chunk.isKindOptional():
+      i = 0
       for optional_arg in roll_out_optional(chunk.string):
         if place_markers_for_optional_args:
-          word += snippetsFormatPlaceHolder(optional_arg)
+          word += snippetsFormatPlaceHolder(optional_arg, i)
+          i += 1
         info += optional_arg + "=?"
 
     if chunk.isKindPlaceHolder():

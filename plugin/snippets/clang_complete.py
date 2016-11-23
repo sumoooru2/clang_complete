@@ -12,13 +12,16 @@ def snippetsInit():
 # The two following function are performance sensitive, do _nothing_
 # more that the strict necessary.
 
-def snippetsFormatPlaceHolder(word):
-  return "$`%s`" % word
+# def snippetsFormatPlaceHolder(word):
+#   return "$`%s`" % word
+def snippetsFormatPlaceHolder(word, num = 0):
+  return "<`%d:%s`>" % (num, word)
 
 def snippetsAddSnippet(fullname, word, abbr):
   return word
 
-r = re.compile('\$`[^`]*`')
+# r = re.compile('\$`[^`]*`')
+r = re.compile('\<`[^`]*`>')
 
 def snippetsTrigger():
   if r.search(vim.current.line) is None:

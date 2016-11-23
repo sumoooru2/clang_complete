@@ -445,6 +445,7 @@ endfunction
 let b:col = 0
 
 function! ClangComplete(findstart, base)
+  echom printf("%d 回目" , a:findstart ? 1 : 2)
   if a:findstart
     let l:line = getline('.')
     let l:start = col('.') - 1
@@ -494,6 +495,13 @@ function! ClangComplete(findstart, base)
     if g:clang_debug == 1
       echom 'clang_complete: completion time ' . split(reltimestr(reltime(l:time_start)))[0]
     endif
+    " call complete_add('hogee')
+    " for l:r in l:res
+    "   let l:r['word'] .= '<`9:;`>'
+    " endfor
+    " call add(l:res, {'word' : 'hoge'})
+    " return ['aaa', 'aaaa', 'aabbb']
+    " return {'words':l:res, 'refresh': 'always' }
     return l:res
   endif
 endfunction
@@ -571,8 +579,8 @@ function! s:ShouldComplete()
   if (getline('.') =~ '#\s*\(include\|import\)')
     return 0
   else
-    if col('.') == 1
-      return 1
+    if getline('.') !~ '\S'
+      return 0
     endif
     for l:id in synstack(line('.'), col('.') - 1)
       if match(synIDattr(l:id, 'name'), '\CComment\|String\|Number')
@@ -606,10 +614,13 @@ function! s:CompleteDot()
 endfunction
 
 function! s:CompleteArrow()
-  if g:clang_complete_auto != 1 || getline('.')[col('.') - 2] != '-'
+  if g:clang_complete_auto != 1
     return '>'
   endif
-  return '>' . s:LaunchCompletion()
+  let l:l = getline('.')
+  let l:c = col('.')
+  return '>' . (l:l[c-3:c-2] == ' -' ? ' ' : '') .
+        \ (l:l[c - 2] == '-' ? s:LaunchCompletion() : '')
 endfunction
 
 function! s:CompleteColon()
